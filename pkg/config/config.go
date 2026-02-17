@@ -51,6 +51,7 @@ type Config struct {
 	Tools     ToolsConfig     `json:"tools"`
 	Heartbeat HeartbeatConfig `json:"heartbeat"`
 	Devices   DevicesConfig   `json:"devices"`
+	SecOps    SecOpsConfig    `json:"secops"`
 	mu        sync.RWMutex
 }
 
@@ -166,6 +167,43 @@ type DevicesConfig struct {
 	MonitorUSB bool `json:"monitor_usb" env:"PICOCLAW_DEVICES_MONITOR_USB"`
 }
 
+// SecOpsConfig 安全运营配置
+type SecOpsConfig struct {
+	Enabled     bool                      `json:"enabled" env:"PICOCLAW_SECOPS_ENABLED"`
+	ClickHouse  ClickHouseConfig          `json:"clickhouse"`
+	Sheikah     SheikahConfig             `json:"sheikah"`
+	Activities  map[string]ActivityConfig `json:"activities"`
+	DebugUI     DebugUIConfig             `json:"debugui"`
+}
+
+// DebugUIConfig Debug UI 配置
+type DebugUIConfig struct {
+	Enabled bool   `json:"enabled" env:"PICOCLAW_DEBUGUI_ENABLED"`
+	Host    string `json:"host" env:"PICOCLAW_DEBUGUI_HOST"`
+	Port    int    `json:"port" env:"PICOCLAW_DEBUGUI_PORT"`
+}
+
+// ClickHouseConfig ClickHouse 数据库配置
+type ClickHouseConfig struct {
+	Addr     string `json:"addr" env:"PICOCLAW_SECOPS_CLICKHOUSE_ADDR"`
+	Database string `json:"database" env:"PICOCLAW_SECOPS_CLICKHOUSE_DATABASE"`
+	Username string `json:"username" env:"PICOCLAW_SECOPS_CLICKHOUSE_USERNAME"`
+	Password string `json:"password" env:"PICOCLAW_SECOPS_CLICKHOUSE_PASSWORD"`
+}
+
+// SheikahConfig 内部 API 配置
+type SheikahConfig struct {
+	BaseURL string `json:"base_url" env:"PICOCLAW_SECOPS_SHEIKAH_BASE_URL"`
+	APIKey  string `json:"api_key" env:"PICOCLAW_SECOPS_SHEIKAH_API_KEY"`
+}
+
+// ActivityConfig 运营活动配置
+type ActivityConfig struct {
+	Enabled  bool   `json:"enabled"`
+	Schedule string `json:"schedule"` // cron expression
+	Mode     string `json:"mode"`     // "auto" or "manual"
+}
+
 type ProvidersConfig struct {
 	Anthropic     ProviderConfig `json:"anthropic"`
 	OpenAI        ProviderConfig `json:"openai"`
@@ -233,8 +271,8 @@ func DefaultConfig() *Config {
 			Defaults: AgentDefaults{
 				Workspace:           "~/.picoclaw/workspace",
 				RestrictToWorkspace: true,
-				Provider:            "",
-				Model:               "glm-4.7",
+				Provider:            "vllm",
+				Model:               "default",
 				MaxTokens:           8192,
 				Temperature:         0.7,
 				MaxToolIterations:   20,
@@ -312,7 +350,9 @@ func DefaultConfig() *Config {
 			OpenRouter:   ProviderConfig{},
 			Groq:         ProviderConfig{},
 			Zhipu:        ProviderConfig{},
-			VLLM:         ProviderConfig{},
+			VLLM: ProviderConfig{
+				APIBase: "http://127.0.0.1:8099/v1",
+			},
 			Gemini:       ProviderConfig{},
 			Nvidia:       ProviderConfig{},
 			Moonshot:     ProviderConfig{},
@@ -350,6 +390,36 @@ func DefaultConfig() *Config {
 		Devices: DevicesConfig{
 			Enabled:    false,
 			MonitorUSB: true,
+		},
+		SecOps: SecOpsConfig{
+			Enabled: false,
+			ClickHouse: ClickHouseConfig{
+				Addr:     "localhost:9000",
+				Database: "default",
+				Username: "default",
+				Password: "",
+			},
+			Sheikah: SheikahConfig{
+				BaseURL: "http://localhost:8080",
+				APIKey:  "",
+			},
+			Activities: map[string]ActivityConfig{
+				"risk_analysis": {
+					Enabled:  false,
+					Schedule: "*/30 * * * *",
+					Mode:     "manual",
+				},
+				"weak_analysis": {
+					Enabled:  false,
+					Schedule: "*/60 * * * *",
+					Mode:     "auto",
+				},
+			},
+			DebugUI: DebugUIConfig{
+				Enabled: true,
+				Host:    "0.0.0.0",
+				Port:    18889,
+			},
 		},
 	}
 }

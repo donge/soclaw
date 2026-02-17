@@ -1,0 +1,102 @@
+# ClickHouse SQL 查询模板
+# 使用 $param 或 {{.param}} 进行参数替换
+
+queries:
+  # 待处理风险事件
+  pending_risk_events: |
+    SELECT risk, host, content, ts
+    FROM risk_events
+    WHERE status = 'pending'
+    ORDER BY ts DESC
+    LIMIT $batch_size
+
+  # IP访问记录
+  access_by_ip: |
+    SELECT ip, ts, method, url, status, req_risk
+    FROM access
+    WHERE ip = '$ip'
+      AND ts > now() - INTERVAL 1 DAY
+    ORDER BY ts DESC
+    LIMIT 30
+
+  # 用户访问记录
+  access_by_user: |
+    SELECT ip, ts, method, url, status, req_risk
+    FROM access
+    WHERE uid = '$user_id'
+      AND ts > now() - INTERVAL 1 DAY
+    ORDER BY ts DESC
+    LIMIT 30
+
+  # 设备访问记录
+  access_by_device: |
+    SELECT ip, ts, method, url, status, req_risk
+    FROM access
+    WHERE sid = '$device_id'
+      AND ts > now() - INTERVAL 1 DAY
+    ORDER BY ts DESC
+    LIMIT 30
+
+  # HTTP报文详情
+  http_details: |
+    SELECT req, res
+    FROM access_raw
+    WHERE id = '$id'
+    LIMIT 3
+
+  # 风险主体TOP20
+  risk_top20: |
+    SELECT risk, host, content, type, count() as cnt
+    FROM risk_events
+    WHERE ts > today()
+      AND status = 'pending'
+    GROUP BY risk, host, content, type
+    ORDER BY cnt DESC
+    LIMIT 20
+
+  # 待处理弱点事件
+  pending_weak_events: |
+    SELECT weak_name, host, method, url, channel
+    FROM weak_events
+    WHERE status = 'pending'
+    ORDER BY ts DESC
+    LIMIT $batch_size
+
+  # 弱点HTTP流量
+  weak_http_sample: |
+    SELECT req, res
+    FROM weak
+    WHERE weak_name = '$weak_name'
+      AND channel = '$channel'
+      AND method = '$method'
+      AND url = '$url'
+    LIMIT 1
+
+  # 待分析API列表
+  pending_api_list: |
+    SELECT method, host, url, req, res, biz_type, channel
+    FROM api_sample
+    WHERE analyzed = 0
+    LIMIT $batch_size
+
+  # API样本
+  api_sample: |
+    SELECT method, host, url, req, res
+    FROM api_sample
+    WHERE host = '$host'
+      AND url = '$url'
+    LIMIT 1
+
+  # 待识别应用列表
+  pending_app_list: |
+    SELECT app_id, host, api_list
+    FROM app_sample
+    WHERE analyzed = 0
+    LIMIT $batch_size
+
+  # 应用API列表
+  app_api_list: |
+    SELECT api_list
+    FROM app_sample
+    WHERE app_id = '$app_id'
+    LIMIT 1

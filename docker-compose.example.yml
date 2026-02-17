@@ -1,0 +1,95 @@
+version: "3.8"
+
+services:
+  # PicoClaw Gateway
+  picoclaw:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: picoclaw
+    ports:
+      - "18790:18790"   # Gateway port
+      - "18789:18789"   # Debug UI port
+    environment:
+      # LLM Provider - OpenRouter example
+      - PICOCLAW_PROVIDERS_OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - PICOCLAW_PROVIDERS_OPENROUTER_API_BASE=${OPENROUTER_API_BASE:-https://openrouter.ai/api/v1}
+
+      # Optional: Use local vLLM
+      # - PICOCLAW_PROVIDERS_VLLM_API_BASE=http://vllm:8000/v1
+      # - PICOCLAW_PROVIDERS_VLLM_API_KEY=${VLLM_API_KEY:-}
+
+      # Channel: Telegram (optional)
+      - PICOCLAW_CHANNELS_TELEGRAM_ENABLED=${TELEGRAM_ENABLED:-false}
+      - PICOCLAW_CHANNELS_TELEGRAM_TOKEN=${TELEGRAM_TOKEN:-}
+
+      # Channel: Discord (optional)
+      - PICOCLAW_CHANNELS_DISCORD_ENABLED=${DISCORD_ENABLED:-false}
+      - PICOCLAW_CHANNELS_DISCORD_TOKEN=${DISCORD_TOKEN:-}
+
+      # SecOps (optional)
+      - PICOCLAW_SECOPS_ENABLED=${SECOPS_ENABLED:-false}
+      - PICOCLAW_SECOPS_CLICKHOUSE_ADDR=${CLICKHOUSE_ADDR:-localhost:8123}
+      - PICOCLAW_SECOPS_SHEIKAH_BASE_URL=${SHEIKAH_BASE_URL:-http://localhost:8080}
+      - PICOCLAW_SECOPS_SHEIKAH_API_KEY=${SHEIKAH_API_KEY:-}
+
+      # Debug UI
+      - PICOCLAW_DEBUGUI_ENABLED=${DEBUGUI_ENABLED:-true}
+      - PICOCLAW_DEBUGUI_PORT=18789
+    volumes:
+      - picoclaw_data:/root/.picoclaw
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:18790/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Optional: vLLM for local LLM
+  # Uncomment to use local LLM instead of cloud provider
+  #
+  # vllm:
+  #   image: vllm/vllm:latest
+  #   container_name: vllm
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - HF_TOKEN=${HF_TOKEN:-}
+  #   volumes:
+  #     - vllm_data:/root/.cache/huggingface
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: all
+  #             capabilities: [gpu]
+  #   command: --model meta-llama/Llama-3.1-8B-Instruct --dtype half --max-model-len 8192
+  #   restart: unless-stopped
+
+  # Optional: ClickHouse for SecOps
+  #
+  # clickhouse:
+  #   image: clickhouse/clickhouse-server:24.3
+  #   container_name: clickhouse
+  #   ports:
+  #     - "8123:8123"
+  #     - "9000:9000"
+  #   environment:
+  #     - CLICKHOUSE_DB=secops
+  #     - CLICKHOUSE_USER=secops
+  #     - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-}
+  #   volumes:
+  #     - clickhouse_data:/var/lib/clickhouse
+  #   restart: unless-stopped
+
+volumes:
+  picoclaw_data:
+    driver: local
+  # vllm_data:
+  # clickhouse_data:
+
+# Networks
+networks:
+  default:
+    name: picoclaw_network

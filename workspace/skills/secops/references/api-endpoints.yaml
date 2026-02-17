@@ -1,0 +1,181 @@
+# 内部API端点配置
+# 用于处置操作和安全分析
+
+apis:
+  # ============ 风险相关 API ============
+
+  # 确认风险
+  confirm_risk:
+    method: POST
+    path: /risk/confirm
+    body: |
+      [{
+        "content": "$content",
+        "host": "$host",
+        "risk": "$risk",
+        "note": "$note"
+      }]
+
+  # 忽略风险
+  ignore_risk:
+    method: POST
+    path: /risk/filter
+    body: |
+      [{
+        "content": "$content",
+        "host": "$host",
+        "risk": "$risk",
+        "note": "$note"
+      }]
+
+  # 获取风险TOP20详情
+  get_risk_top20:
+    method: GET
+    path: /risk/top20?type=$target_type&value=$target_value
+
+  # ============ 弱点相关 API ============
+
+  # 确认弱点
+  confirm_weak:
+    method: POST
+    path: /apiweak/manage/batch
+    body: |
+      {
+        "tag": "todo",
+        "apiWeakMgts": [{
+          "defectId": "$weak_name",
+          "host": "$host",
+          "method": "$method",
+          "url": "$url"
+        }],
+        "message": "$note"
+      }
+
+  # 忽略弱点
+  ignore_weak:
+    method: POST
+    path: /apiweak/manage/batch
+    body: |
+      {
+        "tag": "ignore",
+        "apiWeakMgts": [{
+          "defectId": "$weak_name",
+          "host": "$host",
+          "method": "$method",
+          "url": "$url"
+        }],
+        "message": "$note"
+      }
+
+  # ============ 业务分析相关 API ============
+
+  # 创建业务
+  create_business:
+    method: POST
+    path: /antibot/api_data_property
+    body: |
+      {
+        "method": "$method",
+        "path": "$path",
+        "host": "$host",
+        "bizType": 0,
+        "bizDesc": "$biz_desc",
+        "bizLevel": $biz_level,
+        "bizName": "$biz_name",
+        "mode": 1,
+        "ruleSet": []
+      }
+
+  # 获取业务列表
+  get_business_list:
+    method: GET
+    path: /antibot/internal_data_properties?appName=$channel
+
+  # 创建端点
+  create_endpoint:
+    method: POST
+    path: /antibot/internal_endpoint
+    body: |
+      {
+        "method": "$method",
+        "path": "$path"
+      }
+
+  # 更新业务端点
+  update_biz_endpoint:
+    method: PUT
+    path: /antibot/internal_biz_endpoint
+    body: |
+      {
+        "dataPropertyID": "$biz_id",
+        "endpointID": "$endpoint_id"
+      }
+
+  # 保存API分析结果
+  save_api_analysis:
+    method: POST
+    path: /antibot/internal_api/api_analysis
+    body: |
+      {
+        "host": "$host",
+        "method": "$method",
+        "path": "$path",
+        "biz_analysis": "$biz_analysis",
+        "importance_analysis": "$importance_analysis",
+        "param_analysis": "$param_analysis",
+        "importance": "$importance",
+        "skip_if_exist": true
+      }
+
+  # ============ 应用分析相关 API ============
+
+  # 创建应用
+  create_app:
+    method: POST
+    path: /antibot/internal_app
+    body: |
+      {
+        "name": "$app_name",
+        "domainList": ["$host"],
+        "urlPrefix": "/",
+        "isMirror": true,
+        "desc": "$app_desc"
+      }
+
+  # 获取应用
+  get_app:
+    method: GET
+    path: /antibot/internal_app/$app_id
+
+  # 更新应用
+  update_app:
+    method: PUT
+    path: /antibot/internal_app/$app_id
+    body: |
+      {
+        "desc": "$app_desc"
+      }
+
+  # ============ 提案相关 API (人工确认模式) ============
+
+  # 创建提案
+  create_proposal:
+    method: POST
+    path: /secops/proposal
+    body: |
+      {
+        "type": "$type",
+        "title": "$title",
+        "content": "$content",
+        "data": $data
+      }
+
+  # 确认提案
+  confirm_proposal:
+    method: POST
+    path: /secops/proposal/$proposal_id/confirm
+
+  # 拒绝提案
+  reject_proposal:
+    method: POST
+    path: /secops/proposal/$proposal_id/reject

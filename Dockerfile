@@ -29,8 +29,12 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 # Copy binary
 COPY --from=builder /src/build/picoclaw /usr/local/bin/picoclaw
 
+# Copy config example
+COPY --from=builder /src/config/config.example.json /root/config.json
+
 # Create picoclaw home directory
-RUN /usr/local/bin/picoclaw onboard
+RUN mkdir -p /root/.picoclaw && \
+    cp /root/config.json /root/.picoclaw/config.json
 
 ENTRYPOINT ["picoclaw"]
 CMD ["gateway"]

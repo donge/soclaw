@@ -38,6 +38,8 @@ import (
 	"github.com/sipeed/picoclaw/pkg/state"
 	"github.com/sipeed/picoclaw/pkg/tools"
 	"github.com/sipeed/picoclaw/pkg/voice"
+	"github.com/sipeed/picoclaw/pkg/debugui"
+	"github.com/sipeed/picoclaw/pkg/secops"
 )
 
 //go:generate cp -r ../../workspace .
@@ -565,6 +567,10 @@ func gatewayCmd() {
 	execTimeout := time.Duration(cfg.Tools.Cron.ExecTimeoutMinutes) * time.Minute
 	cronService := setupCronTool(agentLoop, msgBus, cfg.WorkspacePath(), cfg.Agents.Defaults.RestrictToWorkspace, execTimeout)
 
+	// SecOps service
+	var secopsService *secops.Service
+	var secopsErr error
+
 	heartbeatService := heartbeat.NewHeartbeatService(
 		cfg.WorkspacePath(),
 		cfg.Heartbeat.Interval,
@@ -648,6 +654,43 @@ func gatewayCmd() {
 	}
 	fmt.Println("✓ Heartbeat service started")
 
+	// 启动 SecOps 安全运营服务
+	secopsService, secopsErr = secops.NewService(&cfg.SecOps, agentLoop, msgBus)
+	if secopsErr != nil {
+		fmt.Printf("Error creating secops service: %v\n", secopsErr)
+	} else if secopsService != nil {
+		if err := secopsService.Start(); err != nil {
+			fmt.Printf("Error starting secops service: %v\n", err)
+		} else if cfg.SecOps.Enabled {
+			fmt.Println("✓ SecOps service started")
+		}
+	}
+
+	// 启动 Debug UI 服务器
+	var debugUIServer *debugui.Server
+	if cfg.SecOps.DebugUI.Enabled {
+		proposalService := func() *secops.ProposalService {
+			if secopsService != nil {
+				return secopsService.ProposalService()
+			}
+			return nil
+		}()
+
+		debugUIServer = debugui.NewServer(
+			fmt.Sprintf("%s:%d", cfg.SecOps.DebugUI.Host, cfg.SecOps.DebugUI.Port),
+			agentLoop,
+			proposalService,
+			secopsService,
+			cfg.WorkspacePath(),
+		)
+		go func() {
+			if err := debugUIServer.Start(); err != nil {
+				logger.ErrorCF("debugui", "Debug UI server error", map[string]interface{}{"error": err.Error()})
+			}
+		}()
+		fmt.Printf("✓ Debug UI available at http://localhost:%d\n", cfg.SecOps.DebugUI.Port)
+	}
+
 	stateManager := state.NewManager(cfg.WorkspacePath())
 	deviceService := devices.NewService(devices.Config{
 		Enabled:    cfg.Devices.Enabled,
@@ -682,6 +725,12 @@ func gatewayCmd() {
 	cancel()
 	healthServer.Stop(context.Background())
 	deviceService.Stop()
+	if debugUIServer != nil {
+		debugUIServer.Stop(context.Background())
+	}
+	if secopsService != nil {
+		secopsService.Stop()
+	}
 	heartbeatService.Stop()
 	cronService.Stop()
 	agentLoop.Stop()
