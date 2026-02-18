@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>安全运营龙虾 - SOClaw</title>
+    <title>安全运营虾</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .hero-gradient {
@@ -21,12 +21,11 @@
         <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <span class="text-3xl">🦞</span>
-                <span class="text-xl font-bold">安全运营龙虾</span>
+                <span class="text-xl font-bold">安全运营虾</span>
             </div>
             <div class="flex space-x-6">
                 <a href="#features" class="hover:text-blue-400 transition">功能</a>
                 <a href="#secops" class="hover:text-blue-400 transition">安全运营</a>
-                <a href="#debugui" class="hover:text-blue-400 transition">Debug UI</a>
                 <a href="#architecture" class="hover:text-blue-400 transition">架构</a>
                 <a href="#docker" class="hover:text-blue-400 transition">Docker</a>
             </div>
@@ -34,7 +33,7 @@
 
         <div class="container mx-auto px-6 py-20 text-center">
             <h1 class="text-5xl font-bold mb-6">
-                🦞 安全运营龙虾
+                🦞 安全运营虾
             </h1>
             <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                 基于 PicoClaw 的智能安全运营助手，自动化风险分析、弱点评估、API业务识别
@@ -110,104 +109,6 @@
         </div>
     </section>
 
-    <!-- SecOps Section -->
-    <section id="secops" class="bg-gray-800 py-20">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-12">安全运营工作流</h2>
-
-            <div class="flex flex-wrap justify-center items-center gap-4 mb-12">
-                <div class="bg-gray-700 px-4 py-2 rounded-lg">
-                    <span class="text-gray-300">定时任务触发</span>
-                </div>
-                <span class="text-gray-500">→</span>
-                <div class="bg-gray-700 px-4 py-2 rounded-lg">
-                    <span class="text-gray-300">LLM分析</span>
-                </div>
-                <span class="text-gray-500">→</span>
-                <div class="bg-yellow-600 px-4 py-2 rounded-lg">
-                    <span class="text-white">生成提案</span>
-                </div>
-                <span class="text-gray-500">→</span>
-                <div class="bg-blue-600 px-4 py-2 rounded-lg">
-                    <span class="text-white">用户审批</span>
-                </div>
-                <span class="text-gray-500">→</span>
-                <div class="bg-green-600 px-4 py-2 rounded-lg">
-                    <span class="text-white">执行操作</span>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-gray-900 rounded-xl p-6 border border-gray-700">
-                    <h3 class="text-xl font-bold mb-4 text-green-400">手动模式 (Manual)</h3>
-                    <ul class="space-y-2 text-gray-300">
-                        <li>✓ LLM 分析后生成提案</li>
-                        <li>✓ 等待用户审批</li>
-                        <li>✓ 用户确认/忽略/修改参数</li>
-                        <li>✓ 执行相应操作</li>
-                    </ul>
-                </div>
-                <div class="bg-gray-900 rounded-xl p-6 border border-gray-700">
-                    <h3 class="text-xl font-bold mb-4 text-blue-400">自动模式 (Auto)</h3>
-                    <ul class="space-y-2 text-gray-300">
-                        <li>✓ LLM 直接分析</li>
-                        <li>✓ 自动确认/忽略</li>
-                        <li>✓ 无需人工干预</li>
-                        <li>✓ 适合低风险操作</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Debug UI Section -->
-    <section id="debugui" class="container mx-auto px-6 py-20">
-        <h2 class="text-3xl font-bold text-center mb-12">Debug UI</h2>
-
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-                <h3 class="text-2xl font-bold mb-4">浏览器可视化操作界面</h3>
-                <p class="text-gray-400 mb-6">
-                    通过 Web 界面直接与 Agent 对话，查看工具、技能，审批安全运营提案
-                </p>
-                <ul class="space-y-3">
-                    <li class="flex items-center">
-                        <span class="text-green-400 mr-2">✓</span>
-                        <span>💬 对话 - 与 Agent 实时交流</span>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-green-400 mr-2">✓</span>
-                        <span>🔧 工具 - 查看可用工具列表</span>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-green-400 mr-2">✓</span>
-                        <span>✨ 技能 - 查看已加载技能</span>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-green-400 mr-2">✓</span>
-                        <span>📋 提案 - 审批安全运营提案</span>
-                    </li>
-                    <li class="flex items-center">
-                        <span class="text-green-400 mr-2">✓</span>
-                        <span>⚙️ 设置 - 查看系统信息</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-4 border border-gray-700">
-                <div class="bg-gray-900 rounded-lg p-4 text-sm font-mono">
-                    <div class="text-gray-400"># 启动 Debug UI</div>
-                    <div class="text-blue-400">docker run -p 18789:18789 SOClaw</div>
-                    <br>
-                    <div class="text-gray-400"># 或使用 docker-compose</div>
-                    <div class="text-blue-400">docker-compose up -d</div>
-                    <br>
-                    <div class="text-gray-400"># 访问</div>
-                    <div class="text-green-400">http://localhost:18789</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Architecture Section -->
     <section id="architecture" class="container mx-auto px-6 py-20">
         <h2 class="text-3xl font-bold text-center mb-12">技术架构</h2>
@@ -235,13 +136,13 @@
                     <div class="text-center">
                         <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 border border-blue-400 mb-2">
                             <div class="text-white font-bold">SOClaw Gateway</div>
-                            <div class="text-blue-200 text-xs">安全运营龙虾</div>
+                            <div class="text-blue-200 text-xs">安全运营虾</div>
                         </div>
                         <div class="grid grid-cols-3 gap-2 mt-2">
                             <div class="bg-gray-700 px-2 py-1 rounded text-xs">Channel</div>
                             <div class="bg-gray-700 px-2 py-1 rounded text-xs">Agent</div>
                             <div class="bg-gray-700 px-2 py-1 rounded text-xs">Tools</div>
-                            <div class="bg-gray-700 px-2 py-1 rounded text-xs col-span-3">SecOps Service</div>
+                            <div class="bg-gray-700 px-2 py-1 rounded text-xs col-span-3">Skills</div>
                         </div>
                     </div>
 
@@ -257,65 +158,6 @@
                             <div class="bg-red-900 text-red-200 px-3 py-1 rounded text-sm">Action 执行</div>
                             <div class="bg-green-900 text-green-200 px-3 py-1 rounded text-sm">Response 响应</div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SecOps Flow -->
-        <div class="mb-16">
-            <h3 class="text-2xl font-bold mb-8 text-center">SecOps 工作流程</h3>
-            <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
-                <div class="flex flex-wrap justify-center items-center gap-4">
-                    <!-- Trigger -->
-                    <div class="bg-blue-600 rounded-lg p-4 text-center">
-                        <div class="text-2xl mb-2">⏰</div>
-                        <div class="text-sm">定时任务</div>
-                    </div>
-
-                    <div class="text-gray-500">→</div>
-
-                    <!-- Query Data -->
-                    <div class="bg-purple-600 rounded-lg p-4 text-center">
-                        <div class="text-2xl mb-2">🔍</div>
-                        <div class="text-sm">查询数据</div>
-                        <div class="text-xs text-purple-200">数据平台</div>
-                    </div>
-
-                    <div class="text-gray-500">→</div>
-
-                    <!-- LLM Analysis -->
-                    <div class="bg-green-600 rounded-lg p-4 text-center">
-                        <div class="text-2xl mb-2">🧠</div>
-                        <div class="text-sm">LLM 分析</div>
-                        <div class="text-xs text-green-200">智能推理</div>
-                    </div>
-
-                    <div class="text-gray-500">→</div>
-
-                    <!-- Decision -->
-                    <div class="bg-yellow-600 rounded-lg p-4 text-center">
-                        <div class="text-2xl mb-2">❓</div>
-                        <div class="text-sm">决策判断</div>
-                        <div class="text-xs text-yellow-200">自动/手动</div>
-                    </div>
-
-                    <div class="text-gray-500">→</div>
-
-                    <!-- Manual Mode -->
-                    <div class="bg-orange-600 rounded-lg p-4 text-center">
-                        <div class="text-2xl mb-2">👤</div>
-                        <div class="text-sm">用户审批</div>
-                        <div class="text-xs text-orange-200">确认/忽略</div>
-                    </div>
-
-                    <div class="text-gray-500">→</div>
-
-                    <!-- Execute -->
-                    <div class="bg-red-600 rounded-lg p-4 text-center">
-                        <div class="text-2xl mb-2">⚡</div>
-                        <div class="text-sm">执行操作</div>
-                        <div class="text-xs text-red-200">调用API</div>
                     </div>
                 </div>
             </div>
@@ -339,11 +181,6 @@
                     <div class="text-3xl mb-4">🔧</div>
                     <h4 class="text-lg font-bold mb-2">Tools</h4>
                     <p class="text-gray-400 text-sm">工具集，文件系统、命令执行、API调用等</p>
-                </div>
-                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
-                    <div class="text-3xl mb-4">📋</div>
-                    <h4 class="text-lg font-bold mb-2">SecOps</h4>
-                    <p class="text-gray-400 text-sm">安全运营，提案审批、数据分析、风险评估</p>
                 </div>
             </div>
         </div>
@@ -401,7 +238,7 @@ docker-compose up -d
         <div class="container mx-auto px-6 text-center">
             <div class="flex items-center justify-center space-x-3 mb-4">
                 <span class="text-2xl">🦞</span>
-                <span class="text-xl font-bold">安全运营龙虾</span>
+                <span class="text-xl font-bold">安全运营虾</span>
             </div>
             <p class="text-gray-400 mb-4">
                 基于 PicoClaw 的智能安全运营助手
