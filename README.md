@@ -1,6 +1,6 @@
 # 安全运营龙虾 (Security Operation Claw)
 
-基于 [PicoClaw](https://github.com/sipeed/picoclaw) 的智能安全运营助手
+基于 [PicoClaw](https://github.com/donge/soclaw) 的智能安全运营助手
 
 <div align="center">
   <img src="assets/logo.jpg" alt="Security Operation Claw" width="256">
