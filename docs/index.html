@@ -109,6 +109,56 @@
         </div>
     </section>
 
+    <!-- SecOps Section -->
+    <section id="secops" class="bg-gray-800 py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">安全运营工作流</h2>
+
+            <div class="flex flex-wrap justify-center items-center gap-4 mb-12">
+                <div class="bg-gray-700 px-4 py-2 rounded-lg">
+                    <span class="text-gray-300">定时任务触发</span>
+                </div>
+                <span class="text-gray-500">→</span>
+                <div class="bg-gray-700 px-4 py-2 rounded-lg">
+                    <span class="text-gray-300">LLM分析</span>
+                </div>
+                <span class="text-gray-500">→</span>
+                <div class="bg-yellow-600 px-4 py-2 rounded-lg">
+                    <span class="text-white">生成提案</span>
+                </div>
+                <span class="text-gray-500">→</span>
+                <div class="bg-blue-600 px-4 py-2 rounded-lg">
+                    <span class="text-white">用户审批</span>
+                </div>
+                <span class="text-gray-500">→</span>
+                <div class="bg-green-600 px-4 py-2 rounded-lg">
+                    <span class="text-white">执行操作</span>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-900 rounded-xl p-6 border border-gray-700">
+                    <h3 class="text-xl font-bold mb-4 text-green-400">手动模式 (Manual)</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>✓ LLM 分析后生成提案</li>
+                        <li>✓ 等待用户审批</li>
+                        <li>✓ 用户确认/忽略/修改参数</li>
+                        <li>✓ 执行相应操作</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-900 rounded-xl p-6 border border-gray-700">
+                    <h3 class="text-xl font-bold mb-4 text-blue-400">自动模式 (Auto)</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>✓ LLM 直接分析</li>
+                        <li>✓ 自动确认/忽略</li>
+                        <li>✓ 无需人工干预</li>
+                        <li>✓ 适合低风险操作</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Architecture Section -->
     <section id="architecture" class="container mx-auto px-6 py-20">
         <h2 class="text-3xl font-bold text-center mb-12">技术架构</h2>
